@@ -1,7 +1,9 @@
 .sidebarButton {
   border-radius: 3px;
   border-width: 2px;
-  border-color:#cc7dfa
+  border-color:#cc7dfa;
+  background-color: #eedff7;
+  margin-bottom: 3px;
 }
 .sidebarButton:hover {
   border-radius: 3px;
