@@ -15,6 +15,8 @@ class CreateOrdersServicesTable extends Migration
     {
         Schema::create('orders_services', function (Blueprint $table) {
             $table->id();
+            $table->foreign('service_id')->references('id')->on('services');
+            $table->foreign('order_id')->references('id')->on('orders');
             $table->timestamps();
         });
     }
