@@ -6,3 +6,15 @@
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+
+.sidebarButton {
+  border-radius: 3px;
+  border-width: 2px;
+  border-color:#cc7dfa
+}
+.sidebarButton:hover, .sidebarButtonSelected {
+  border-radius: 3px;
+  border-width: 2px;
+  border-color: #cc7dfa;
+  background-color: #d9b7ed;
+}

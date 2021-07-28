@@ -13,8 +13,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-      // TODO: uncomment
-        //$this->middleware('auth');
+
     }
 
     /**
