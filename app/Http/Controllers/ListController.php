@@ -8,7 +8,7 @@ class ListController extends Controller
 {
   public function __construct()
   {
-    // TODO: uncomment
+      // TODO: uncomment
       // $this->middleware('auth');
   }
 

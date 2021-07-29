@@ -26,7 +26,7 @@
         </div>
     </div>
   </aside>
-  <div class="col-12 col-md-10">
+  <div class="col-12 col-md-10" id="root1">
     <script src="{{ asset('js/services.js') }}" defer></script>
   </div>
 </div>

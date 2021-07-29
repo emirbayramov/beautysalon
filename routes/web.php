@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/services', [App\Http\Controllers\ServicesController::class, 'services'])->name('home');
 
 Auth::routes([
   'register' => false, // Registration Routes...
