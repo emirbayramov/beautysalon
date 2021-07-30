@@ -11,17 +11,17 @@
         </div>
         <div class="sidebarButton row">
             <div class="col">
-                Сегодняшние записи
+                <a href="/list">Сегодняшние записи</a>
             </div>
         </div>
         <div class="row sidebarButton">
             <div class="col">
-                Отчеты
+                <a href="/reports">Отчеты</a>
             </div>
         </div>
         <div class="row sidebarButton">
             <div class="col">
-                Управление
+                <a href="/settings">Управление</a>
             </div>
         </div>
     </div>

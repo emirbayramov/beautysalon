@@ -2,6 +2,7 @@ import React,{FC,useState} from 'react';
 import ReactDOM from 'react-dom';
 import SelectService from 'components/services/SelectService'
 import SelectMaster from 'components/services/SelectMaster'
+import ClientData from 'components/services/ClientData'
 import State from 'components/services/ServicesStates'
 
 
@@ -13,7 +14,8 @@ const Services:FC = () => {
   const [master,setMaster] = useState<string|null>(null);
 
   const setMasterAndDate = (master:string,time:Date)=>{
-    setMaster(master);setTime(time);
+    setMaster(master);
+    setTime(time);
   }
 
   const nextState = (selected:string[],state:State)=>{
@@ -23,12 +25,8 @@ const Services:FC = () => {
   return <div className="container-fluid">
     {{
         [State.SelectService]:<SelectService nextState={nextState}/>,
-        [State.SelectTimeAndMaster]:<SelectMaster selected={selected}/>,
-        [State.ClientData]:<div>dsds</div>
-        /*<ClientData selected={selected}
-                    time={time}
-                    master={master}
-                    setState={setState}/>*/
+        [State.SelectTimeAndMaster]:<SelectMaster setState={setState} selected={selected}/>,
+        [State.ClientData]:<ClientData setState={setState} />
     }[state]}
   </div>
 }

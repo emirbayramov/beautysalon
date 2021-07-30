@@ -1,3 +1,20 @@
 .selectedDay {
   background-color: #ada7fa
 }
+
+.time-column {
+  border: 1px solid blue;
+  border-radius: 3px;
+}
+
+.time-column-mouseover {
+  border: 1px solid blue;
+  border-radius: 3px;
+  background-color: #46b34d;
+}
+
+.time-column-busy {
+  border: 1px solid blue;
+  border-radius: 3px;
+  background-color: #ff4040;
+}
