@@ -1,1 +1,1 @@
-Beauty salo record list
+Beauty salon record list
