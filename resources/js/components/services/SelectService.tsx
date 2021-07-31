@@ -8,7 +8,7 @@ interface Props {
 
 const SelectService:FC<Props> = ({nextState})=>{
 
-  const [list,setList] = useState(()=>['Наращивание',"Маникюр калдеж","Педикюр","Ресницы"]);
+  const [list,setList] = useState(()=>['Наращивание',"Маникюр","Педикюр","Ресницы"]);
   const [selected,setSSelected] = useState<string[]>([]) ;
 
   const onServiceSelect = (index:number) => () => {
@@ -24,21 +24,45 @@ const SelectService:FC<Props> = ({nextState})=>{
   }
 
   return <div className="row">
-    <div className="col-12 col-md-6">
+    <div className="col-12 col-md-6" style={{textAlign:'center'}}>
+      <h2 >Select service</h2>
       <div className="container">
-        { list.map((serv,i)=><div key={i} className="row" onClick={onServiceSelect(i)}>{serv}</div>) }
+
+        { list.map((serv,i)=><div className="row" key={i} style={{marginBottom:'5px'}}>
+            <div className="col-3">
+            </div>
+            <div  className="col-6 btn btn-outline-secondary" onClick={onServiceSelect(i)}>
+              {serv}
+            </div>
+            <div className="col-3">
+            </div>
+          </div> )
+        }
       </div>
     </div>
     <div className="col-12 col-md-6">
     <div className="container">
-        {selected.length>0?<div className="row"
-          onClick={()=>{
-            console.log(nextState);
-            nextState(selected,State.SelectTimeAndMaster);
-          }}>
-          Select
-        </div>:<div className="row" >Select</div>}
-        { selected.map((serv,i)=><div key={i} className="row" onClick={onServiceUnSelect(i)}>{serv}</div>) }
+        {selected.length >0?<div className="row" style={{marginBottom:'20px'}}>
+              <div className="col-12 btn btn-outline-primary"
+
+              onClick={()=>{
+                console.log(nextState);
+                nextState(selected,State.SelectTimeAndMaster);
+              }}>
+              Next
+            </div>
+            </div>:
+            <div className="row" style={{marginBottom:'20px'}}>
+              <div className="col-12 btn btn-outline-primary disabled" >
+                Next
+              </div>
+            </div>}
+        { selected.map((serv,i)=>
+            <div className="row" style={{marginBottom:'5px'}}>
+              <div key={i} className="col-12 btn btn-outline-secondary" onClick={onServiceUnSelect(i)}>
+                {serv}
+              </div>
+            </div>) }
       </div>
     </div>
   </div>;

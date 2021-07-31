@@ -27,17 +27,22 @@ const SelectMaster:FC<Props> = ({selected,setState}:Props)=>{
   return (<div className="row">
       <div className="col-12 col-md-6">
         <div className="container">
-          { masters.map((master,i)=><div key={i} className="row" onClick={()=>alert(i)}>{master}</div>) }
+          { masters.map((master,i)=><div key={i} className="row" style={{marginBottom:"5px"}}>
+              <div className="col btn btn-outline-secondary" onClick={()=>{}}>
+                {master}
+              </div>
+            </div>) }
         </div>
       </div>
       <div className="col-12 col-md-6">
+        {isTimePicked?
+          <button className="btn btn-outline-primary col-sm-12"
+            onClick={()=>setState(State.ClientData)}>Next</button>
+          :<div className="btn btn-outline-primary col-sm-12">Next</div>
+        }
         <div className="card">
           <h3 className="card-header" id="monthAndYear"></h3>
-          {isTimePicked?
-            <button className="btn btn-outline-primary col-sm-12"
-              onClick={()=>setState(State.ClientData)}>Next</button>
-            :<div className="btn btn-outline-primary col-sm-12">Next</div>
-          }
+
           <div className="form-inline">
 
               <button className="btn btn-outline-primary col-sm-3" id="previous"
@@ -175,7 +180,6 @@ const SelectMaster:FC<Props> = ({selected,setState}:Props)=>{
                               onClick={()=>{
                                 setSelectedHour(i*4+j);
                                 setTimePicked(true);
-                                alert(`selected hour is ${i*4+j}`);
                               }}
                               onMouseEnter={i*4+j!==mouseOverCell?()=>{
                                 setMouseOverCell(i*4+j);

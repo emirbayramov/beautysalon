@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ListController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\ServicesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +20,8 @@ use App\Http\Controllers\SettingsController;
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/services', [App\Http\Controllers\ServicesController::class, 'services'])->name('services');
 Route::get('/settings', [App\Http\Controllers\SettingsController::class, 'settings'])->name('settings');
+Route::get('/list', [App\Http\Controllers\ListController::class, 'list'])->name('list');
+Route::get('/report', [App\Http\Controllers\ReportsController::class, 'report'])->name('reports');
 
 Auth::routes([
   'register' => false, // Registration Routes...

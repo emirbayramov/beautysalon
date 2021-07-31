@@ -6,22 +6,22 @@
     <div class="container">
         <div class="sidebarButton row">
             <div class="col">
-                <a href="/services">Новый заказ</a>
+                <a href="/services">New order</a>
             </div>
         </div>
         <div class="sidebarButton row">
             <div class="col">
-              <a href="/list">Сегодняшние записи</a>
+              <a href="/list">Orders</a>
             </div>
         </div>
         <div class="row sidebarButton">
             <div class="col">
-                <a href="/reports">Отчеты</a>
+                <a href="/reports">Reports</a>
             </div>
         </div>
         <div class="row sidebarButtonSelected">
             <div class="col">
-                Управление
+                Settings
             </div>
         </div>
     </div>
