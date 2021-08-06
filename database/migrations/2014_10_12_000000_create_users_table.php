@@ -21,6 +21,8 @@ class CreateUsersTable extends Migration
             $table->string('phone');
             $table->string('password');
             $table->string('role');
+            $table->bigInteger('department_id')->unsigned();
+            $table->foreign('department_id')->references('id')->on('departments');
             $table->rememberToken();
             $table->timestamps();
         });
