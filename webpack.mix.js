@@ -15,7 +15,6 @@ const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 mix.ts('resources/js/services.tsx', 'public/js')
     .ts('resources/js/settings.tsx', 'public/js')
     .ts('resources/js/list.tsx', 'public/js')
-    .ts('resources/js/reports.tsx', 'public/js')
     .sass('resources/sass/app.scss', 'public/css')
     .webpackConfig({
         resolve: {
