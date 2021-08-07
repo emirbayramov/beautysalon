@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Http\Resources\OrderResource;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+
 class OrdersController extends Controller
 {
   public function __construct()
@@ -15,12 +17,35 @@ class OrdersController extends Controller
 
   public function list()
   {
-      return view('list');
+      return view('orders');
   }
 
   public function getOrder($id){
       $order = Order::findOrFail($id);
       return new OrderResource($order);
+  }
+
+  public function getOrdersByDate(Request $req){
+      try {
+        $validated = $req->validate([
+          'date'=>'required|date',
+          'department_id'=>'required|numeric'
+        ]);
+        $users = User::where('department_id',$validated['department_id']);
+
+        $orders = array();
+        foreach($users as $user){
+          $ordersByDate = Order::whereDate('datetime',$validated['date'])
+            ->where('user_id',$user->id);
+          $orders[$user->id] = $ordersByDate;        
+        }
+        print_r($orders);
+
+        return "ok";
+
+      }catch(\Exception $e){
+        return "invalid arguments";
+      }
   }
 
   public function getOrders(){
@@ -36,7 +61,7 @@ class OrdersController extends Controller
             'user_id'=>'required|numeric',
             'amount'=>'required|numeric',
             'comment'=>'nullable|string',
-            'datetime'=>'required|date',
+            'datetime'=>'required|date_format:"Y-m-d\TH:i',
             'confirmed'=>'required|boolean'
           ]);
           $order->fill($validated)->save();
@@ -44,7 +69,7 @@ class OrdersController extends Controller
           return new OrderResource($order);
 
         } catch(\Exception $exception) {
-            throw new HttpException(400, "Invalid data - {$exception->getMessage}");
+            throw new HttpException(400, "Invalid data - {$exception->getMessage()}");
         }
       
   }

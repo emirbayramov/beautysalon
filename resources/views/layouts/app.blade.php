@@ -37,6 +37,15 @@
                 <!-- Right Side Of Navbar -->
                 <ul class="navbar-nav ml-auto">
                     <!-- Authentication Links -->
+                    <li class="nav-item">
+                        <a href="/orders" class="nav-link">Orders</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/reports"  class="nav-link">Reports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/settings" class="nav-link">Settings</a>
+                    </li>
                     @guest
                         @if (Route::has('login'))
                             <li class="nav-item">
@@ -44,7 +53,8 @@
                             </li>
                         @endif
                           @if (Route::has('register'))
-                            <li class="nav-item">
+
+                          <li class="nav-item">
                                 <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
                             </li>
                           @endif

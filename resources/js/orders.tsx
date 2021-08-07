@@ -62,6 +62,9 @@ const ulya = [
     service:'Protez'
   }
 ]
+
+
+
 const List:FC=()=>{
 
     const mmm=['Masha','Meri','Ulya']

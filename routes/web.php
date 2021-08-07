@@ -18,9 +18,8 @@ use App\Http\Controllers\ServicesController;
 
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/services', [App\Http\Controllers\ServicesController::class, 'services'])->name('services');
 Route::get('/settings', [App\Http\Controllers\SettingsController::class, 'settings'])->name('settings');
-Route::get('/list', [App\Http\Controllers\ListController::class, 'list'])->name('list');
+Route::get('/orders', [App\Http\Controllers\OrdersController::class, 'list'])->name('list');
 Route::get('/reports', [App\Http\Controllers\ReportsController::class, 'report'])->name('reports');
 
 Route::get('/settings/getUser/{id}', [App\Http\Controllers\SettingsController::class, 'getUser'])->name('getUser');
@@ -48,11 +47,11 @@ Route::post('/settings/updateDepartment/{id}', [App\Http\Controllers\SettingsCon
 Route::post('/settings/deleteDepartment/{id}', [App\Http\Controllers\SettingsController::class, 'deleteDepartment'])->name('deleteDepartment');
 
 Route::get('/orders/getOrder/{id}', [App\Http\Controllers\OrdersController::class, 'getOrder'])->name('getOrder');
-Route::get('/orders/getOrders', [App\Http\Controllers\OrdersController::class, 'getOrers'])->name('getOrders');
+Route::get('/orders/getOrders', [App\Http\Controllers\OrdersController::class, 'getOrders'])->name('getOrders');
 Route::post('/orders/createOrder', [App\Http\Controllers\OrdersController::class, 'createOrder'])->name('createOrder');
 Route::post('/orders/updateOrder/{id}', [App\Http\Controllers\OrdersController::class, 'updateOrder'])->name('updateOrder');
 Route::post('/orders/deleteOrder/{id}', [App\Http\Controllers\OrdersController::class, 'deleteOrder'])->name('deleteOrder');
-
+Route::get('/orders/getOrdersByDate', [App\Http\Controllers\OrdersController::class, 'getOrdersByDate'])->name('getOrdersByDate');
 
 Auth::routes([
  // 'register' => false, // Registration Routes...
