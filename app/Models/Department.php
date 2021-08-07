@@ -11,6 +11,16 @@ class Department extends Model
     
     protected $table='departments';
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name',
+        'address',
+        'description'
+    ];
     public function users(){
         return $this->hasMany('App\Models\User','user_id');
     }

@@ -11,6 +11,18 @@ class Service extends Model
 
     protected $table='services';
 
+    
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name',
+        'description',
+        'price'
+    ];
+
     public function services(){
         return $this->belongsToMany('App\Models\User','services_users','service_id','user_id');
     }

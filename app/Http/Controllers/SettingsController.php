@@ -9,10 +9,10 @@ use App\Models\Department;
 use App\Models\Client;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Resourses\UserResourse;
-use App\Http\Resourses\ServiceResourse;
-use App\Http\Resourses\DepartmentResourse;
-use App\Http\Resourses\ClientResourse;
+use App\Http\Resources\UserResource;
+use App\Http\Resources\ServiceResource;
+use App\Http\Resources\DepartmentResource;
+use App\Http\Resources\ClientResource;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class SettingsController extends Controller
@@ -28,7 +28,7 @@ class SettingsController extends Controller
       return view('settings');
   }
 
-  public function getUser(Request $req,$id){
+  public function getUser($id){
       $user = User::findOrFail($id);
       return new UserResource($user);
   }
@@ -40,12 +40,29 @@ class SettingsController extends Controller
   public function createUser(Request $req){
         try {
           $user = new User;
-          $user->fill($request->validated())->save();
+          $validated = $req->validate([
+            'name'=>'required|string',
+            'email'=>'required|string',
+            'phone'=>'required|string',
+            'password'=>'required|string',
+            'role'=>'required|string',
+            'department_id'=>'required|integer',
+          ]);
+         
+          $user->name=$validated['name'];
+          $user->email=$validated['email'];
+          $user->phone=$validated['phone'];
+          $user->password=Hash::make($validated['password']);
+          $user->role=$validated['role'];
+          $user->department_id=$validated['department_id'];
+
+          $user->save();
 
           return new UserResource($user);
 
         } catch(\Exception $exception) {
-            throw new HttpException(400, "Invalid data - {$exception->getMessage}");
+              
+          throw new HttpException(400, "Invalid data - {$exception->getMessage()}");
         }
       
   }
@@ -56,8 +73,18 @@ class SettingsController extends Controller
         throw new HttpException(400, "Invalid id");
       }
       try{
-        $user = User::find($req->id);  
-        $user->fill($req->validated())->save();
+        $user = User::find($req->id);
+        $validated = $req->validate([
+          'name'=>'nullable|string',
+          'email'=>'nullable|string',
+          'phone'=>'nullable|string',
+          'password'=>'nullable|string',
+          'role'=>'nullable|string',
+          'department_id'=>'nullable|integer',
+        ]);
+        
+        $user->fill($validated)->save();
+            
         return new UserResource($user);
 
       } catch(\Exception $e) {
@@ -70,7 +97,7 @@ class SettingsController extends Controller
     if (!$id){
       throw new HttpException(400, "Invalid id");
     }
- 
+
     $user = User::findOrFail($id);
     $user->delete();
     
@@ -86,17 +113,21 @@ class SettingsController extends Controller
      return ServiceResource::collection(Service::all());
   }
   
-
-  
   public function createService(Request $req){
         try {
           $service = new Service;
-          $service->fill($req->validated())->save();
+          $validated = $req->validate([
+            'name'=>'required|string',
+            'description'=>'required|string',
+            'price'=>'required|numeric'
+          ]);
+
+          $service->fill($validated)->save();
 
           return new ServiceResource($service);
 
         } catch(\Exception $exception) {
-            throw new HttpException(400, "Invalid data - {$exception->getMessage}");
+            throw new HttpException(400, "Invalid data - {$exception->getMessage()}");
         }
       
   }
@@ -108,7 +139,12 @@ class SettingsController extends Controller
       }
       try{
         $service = Service::find($req->id);  
-        $service->fill($req->validated())->save();
+        $validated = $req->validate([
+          'name'=>'nullable|string',
+          'description'=>'nullable|string',
+          'price'=>'nullable|numeric'
+        ]);
+        $service->fill($validated)->save();
         return new ServiceResource($service);
 
       } catch(\Exception $e) {
@@ -142,12 +178,19 @@ class SettingsController extends Controller
   public function createClient(Request $req){
         try {
           $client = new Client;
-          $client->fill($req->validated())->save();
+          $validated = $req->validate([
+              'phone'=>'required|string',
+              'name' =>'required|string',
+              'surname' =>'required|string',
+              'birth_date' =>'required|date',
+          ]);
+
+          $client->fill($validated)->save();
 
           return new ClientResource($client);
 
         } catch(\Exception $exception) {
-            throw new HttpException(400, "Invalid data - {$exception->getMessage}");
+            throw new HttpException(400, "Invalid data - {$exception->getMessage()}");
         }
       
   }
@@ -158,8 +201,15 @@ class SettingsController extends Controller
         throw new HttpException(400, "Invalid id");
       }
       try{
-        $client = Client::find($req->id);  
-        $client->fill($req->validated())->save();
+        $client = Client::findOrFail($req->id);  
+        $validated = $req->validate([
+          'phone'=>'nullable|string',
+          'name' =>'nullable|string',
+          'surname' =>'nullable|string',
+          'birth_date' =>'nullable|date',
+        ]);
+        
+        $client->fill($validated)->save();
         return new ClientResource($client);
 
       } catch(\Exception $e) {
@@ -193,12 +243,21 @@ class SettingsController extends Controller
   public function createDepartment(Request $req){
         try {
           $department = new Department;
-          $department->fill($req->validated())->save();
+          $validated = $req->validate([
+            'name'=>'required|string',
+            'address'=>'required|string',
+            'description'=>'required|string'
+          ]);
+          $department->name = $validated['name'];
+          $department->address = $validated['address'];
+          $department->description = $validated['description'];
+          
+          $department->save();
 
-          return new DepartmentResource($client);
+          return new DepartmentResource($department);
 
         } catch(\Exception $exception) {
-            throw new HttpException(400, "Invalid data - {$exception->getMessage}");
+            return "Invalid data - {$exception->getMessage()}";
         }
       
   }
@@ -210,7 +269,13 @@ class SettingsController extends Controller
       }
       try{
         $department = Department::find($req->id);  
-        $department->fill($req->validated())->save();
+        $validated = $req->validate([
+          'name'=>'nullable|string',
+          'address'=>'nullable|string',
+          'description'=>'nullable|string'
+        ]);
+
+        $department->fill($validated)->save();
         return new DepartmentResource($department);
 
       } catch(\Exception $e) {

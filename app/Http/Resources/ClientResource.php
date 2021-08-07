@@ -7,11 +7,11 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class ClientResource extends JsonResource{
     public function toArray($req){
         return [
-            'id'=> $req->id,
-            'phone'=>$req->phone,
-            'name'=> $req->name,
-            'surname'=> $req->surname,
-            'birth_date'=>$req->birth_date
+            'id'=> $this->id,
+            'phone'=>$this->phone,
+            'name'=> $this->name,
+            'surname'=> $this->surname,
+            'birth_date'=>$this->birth_date
         ];
     }
 }

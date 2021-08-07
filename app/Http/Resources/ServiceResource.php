@@ -7,10 +7,10 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class ServiceResource extends JsonResource{
     public function toArray($req){
         return [
-            'id'=> $req->id,
-            'name'=> $req->name,
-            'description'=>$req->description,
-            'price'=>$req->price,
+            'id'=> $this->id,
+            'name'=> $this->name,
+            'description'=>$this->description,
+            'price'=>$this->price,
         ];
     }
 }

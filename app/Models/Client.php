@@ -11,6 +11,19 @@ class Client extends Model
 
     protected $table='clients';
 
+    
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'phone',
+        'name',
+        'surname',
+        'birth_date'
+    ];
+
     public function orders(){
         return $this->hasMany('App\Models\Order','client_id');
     }
