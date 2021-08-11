@@ -14,7 +14,8 @@ class OrderResource extends JsonResource{
             'comment'=>$this->comment,
             'amount'=>$this->amount,
             'datetime'=>$this->datetime,
-            'confirmed'=>$this->confirmed
+            'confirmed'=>$this->confirmed,
+            'next_user_id'=>$this->next_user_id
 
         ];
     }

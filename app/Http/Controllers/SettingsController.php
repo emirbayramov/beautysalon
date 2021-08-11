@@ -33,8 +33,13 @@ class SettingsController extends Controller
       return new UserResource($user);
   }
   
-  public function getUsers(){
-     return UserResource::collection(User::all());
+  public function getUsers(Request $req){
+    $validated = $req->validate([
+      'department_id'=>'nullable|integer'
+    ]);
+    if(isset($validated['department_id']))
+      return UserResource::collection(User::where('department_id',$req['department_id'])->get());
+    return UserResource::collection(User::all());
   }
 
   public function createUser(Request $req){

@@ -17,6 +17,7 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
     <!-- Styles -->
+    <script src="https://kit.fontawesome.com/729b35e2a6.js" crossorigin="anonymous"></script>
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
@@ -84,5 +85,6 @@
         <main class="py-4 container-fluid" id="main1">
             @yield('content')
         </main>
+        
 </body>
 </html>

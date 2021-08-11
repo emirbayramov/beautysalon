@@ -18,4 +18,6 @@ curl localhost:8000/settings/getClients
 curl localhost:8000/settings/updateClient/1 -X POST -d "surname=Cheshmebashi"
 
 curl localhost:8000/orders/createOrder -X POST -d "client_id=1&service_id=1&user_id=6&amount=200&confirmed=0&datetime=2021-08-08T08:00"
-
+curl localhost:8000/orders/getOrder/2
+curl localhost:8000/orders/getOrders
+curl localhost:8000/orders/deleteOrder/2

@@ -23,17 +23,18 @@ class Order extends Model
         'amount',
         'datetime',
         'confirmed',
-        'comment'
+        'comment',
+        'next_user_id'
     ];
     public function service(){
-        return $this->hasOne('App\Models\Service','service_id');
+        return $this->belongsTo('App\Models\Service','service_id');
     }
 
     public function user(){
-        return $this->hasOne('App\Models\User','user_id');
+        return $this->belongsTo('App\Models\User','user_id');
     }
 
     public function client(){
-        return $this->hasOne('App\Models\Client','client_id');
+        return $this->belongsTo('App\Models\Client','client_id');
     }
 }

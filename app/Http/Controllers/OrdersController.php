@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
+use App\Models\User;
 use App\Http\Resources\OrderResource;
+use App\Http\Resources\FullOrderResource;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class OrdersController extends Controller
@@ -25,26 +27,34 @@ class OrdersController extends Controller
       return new OrderResource($order);
   }
 
+  
+
   public function getOrdersByDate(Request $req){
       try {
+    
         $validated = $req->validate([
           'date'=>'required|date',
           'department_id'=>'required|numeric'
         ]);
-        $users = User::where('department_id',$validated['department_id']);
+        $users = User::where('department_id',$validated['department_id'])->get();
+        
+        $table = array();
+        $table['users']  = array();
+        $table['orders'] = array();
 
-        $orders = array();
         foreach($users as $user){
-          $ordersByDate = Order::whereDate('datetime',$validated['date'])
-            ->where('user_id',$user->id);
-          $orders[$user->id] = $ordersByDate;        
-        }
-        print_r($orders);
+          $table['users'][$user->id]=$user->name;
 
-        return "ok";
+          $ordersByDate = Order::whereDate('datetime',$validated['date'])
+            ->where('user_id',$user->id)->orderBy('datetime')->get();
+          
+          $table['orders'][$user->id] = FullOrderResource::collection($ordersByDate)->toArray(null);        
+        }
+
+        return json_encode($table);
 
       }catch(\Exception $e){
-        return "invalid arguments";
+        return $e->getMessage();
       }
   }
 
@@ -62,7 +72,8 @@ class OrdersController extends Controller
             'amount'=>'required|numeric',
             'comment'=>'nullable|string',
             'datetime'=>'required|date_format:"Y-m-d\TH:i',
-            'confirmed'=>'required|boolean'
+            'confirmed'=>'required|numeric',
+            'next_user_id'=>'nullable|numeric'
           ]);
           $order->fill($validated)->save();
 
@@ -80,7 +91,7 @@ class OrdersController extends Controller
         throw new HttpException(400, "Invalid id");
       }
       try{
-        $order = Order::find($req->id);  
+        $order = Order::findOrFail($req->id);  
         $validated = $req->validate([
           'client_id'=>'nullable|numeric',
           'service_id'=>'nullable|numeric',
@@ -88,14 +99,15 @@ class OrdersController extends Controller
           'amount'=>'nullable|numeric',
           'comment'=>'nullable|string',
           'datetime'=>'nullable|date',
-          'confirmed'=>'nullable|boolean'
+          'confirmed'=>'nullable|numeric',
+          'next_user_id'=>'nullable|numeric'
         ]);
         $order->fill($validated)->save();
 
-        return new OrderResource($oreder);
+        return new OrderResource($order);
 
       } catch(\Exception $e) {
-        throw new HttpException(400,'Invalid data');
+        throw new HttpException(400,"Invalid data {$e->getMessage()}");
       }
       
   }

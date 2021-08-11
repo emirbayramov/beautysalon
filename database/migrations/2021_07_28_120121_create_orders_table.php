@@ -24,7 +24,7 @@ class CreateOrdersTable extends Migration
             $table->decimal('amount', $precision = 8, $scale = 2);
             $table->foreign('service_id')->references('id')->on('services');
             $table->dateTime('datetime');
-            $table->boolean('confirmed');
+            $table->tinyInteger('confirmed')->nullable();
             $table->timestamps();
         });
     }
