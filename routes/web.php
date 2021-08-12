@@ -37,6 +37,7 @@ Route::post('/settings/deleteService/{id}', [App\Http\Controllers\SettingsContro
 Route::get('/settings/getClient/{id}', [App\Http\Controllers\SettingsController::class, 'getClient'])->name('getClient');
 Route::get('/settings/getClients', [App\Http\Controllers\SettingsController::class, 'getClients'])->name('getClients');
 Route::post('/settings/createClient', [App\Http\Controllers\SettingsController::class, 'createClient'])->name('createClient');
+Route::post('/settings/getOrCreateClient', [App\Http\Controllers\SettingsController::class, 'getOrCreateClient'])->name('getOrCreateClient');
 Route::post('/settings/updateClient/{id}', [App\Http\Controllers\SettingsController::class, 'updateClient'])->name('updateClient');
 Route::post('/settings/deleteClient/{id}', [App\Http\Controllers\SettingsController::class, 'deleteClient'])->name('deleteClient');
 

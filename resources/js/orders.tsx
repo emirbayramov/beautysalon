@@ -73,9 +73,18 @@ const Orders:FC=()=>{
       
     }
 
+    const getServicePrice=(id:any)=>{
+      for(let i=0;i<services.length;i++){
+        if(services[i].id === id)
+          return services[i].price;
+      }
+
+      return 0;
+    }
+
     const saveButtonOnClick = ()=>{
       if(isCreate){
-        axios.post('/settings/createClient',{
+        axios.post('/settings/getOrCreateClient',{
           name:clientName,
           surname:'empty',
           phone:clientPhone,
@@ -159,7 +168,10 @@ const Orders:FC=()=>{
             <div className="row margin-bottom-20">
               <label htmlFor="service" className="col-md-2">Service:</label>
               <select id="service" className="col-md-5" value={selectedService}
-                onChange={(evt)=>{setSelectedService(parseInt(evt.target.value))}}>
+                onChange={(evt)=>{
+                    setSelectedService(parseInt(evt.target.value));
+                    setAmount(getServicePrice(parseInt(evt.target.value)));
+                  }}>
                 <option value={0}>Select service</option>
                 {
                   services.map((service:any,i:number)=>{

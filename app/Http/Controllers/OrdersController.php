@@ -36,7 +36,8 @@ class OrdersController extends Controller
           'date'=>'required|date',
           'department_id'=>'required|numeric'
         ]);
-        $users = User::where('department_id',$validated['department_id'])->get();
+        $users = User::where('department_id',$validated['department_id'])
+          ->where('deleted',0)->get();
         
         $table = array();
         $table['users']  = array();

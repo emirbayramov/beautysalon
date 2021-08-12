@@ -10,16 +10,25 @@ const Settings:FC = () => {
 
   return {
     [State.Main]:<div className="container-fluid">
-    <div className="row" style={{marginBottom:"5px"}}>
+      <div className="row mb-2">
+        <div className="col-3">
+        </div>
+        <div className="col-6" style={{textAlign:'center'}}>
+          <h1  >Ayarlar</h1>
+        </div>
+        <div className="col-3">
+        </div>
+      </div>
+    <div className="row mb-3" style={{marginBottom:"5px"}}>
       <div className="col-3">
       </div>
       <div className="col-6 btn btn-outline-primary" onClick={()=>setState(State.Masters)}>
-        Masters
+        Ustalar
       </div>
       <div className="col-3">
       </div>
     </div>
-    <div className="row" style={{marginBottom:"5px"}}>
+    <div className="row mb-3" style={{marginBottom:"5px"}}>
       <div className="col-3">
       </div>
       <div className="col-6  btn btn-outline-primary" onClick={()=>setState(State.Services)}>
@@ -28,7 +37,7 @@ const Settings:FC = () => {
       <div className="col-3">
       </div>
     </div>
-    <div className="row" style={{marginBottom:"5px"}}>
+    <div className="row mb-3" style={{marginBottom:"5px"}}>
       <div className="col-3">
       </div>
       <div className="col-6  btn btn-outline-primary" onClick={()=>setState(State.Clients)}>

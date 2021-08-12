@@ -38,8 +38,9 @@ class SettingsController extends Controller
       'department_id'=>'nullable|integer'
     ]);
     if(isset($validated['department_id']))
-      return UserResource::collection(User::where('department_id',$req['department_id'])->get());
-    return UserResource::collection(User::all());
+      return UserResource::collection(
+        User::where('department_id',$req['department_id'])->where('deleted',0)->get());
+    return UserResource::collection(User::where('deleted',0)->get());
   }
 
   public function createUser(Request $req){
@@ -104,7 +105,8 @@ class SettingsController extends Controller
     }
 
     $user = User::findOrFail($id);
-    $user->delete();
+    $user->deleted = 1;
+    $user->save();
     
     return response()->json(null, 204);
   }
@@ -178,6 +180,30 @@ class SettingsController extends Controller
      return ClientResource::collection(Client::all());
   }
   
+  public function getOrCreateClient(Request $req){
+    try {
+      
+      $validated = $req->validate([
+          'phone'=>'required|string',
+          'name' =>'required|string',
+          'surname' =>'required|string',
+          'birth_date' =>'required|date',
+      ]);
+      $client = Client::where('phone',$validated['phone'])->first();
+      if($client)
+        return new ClientResource($client);
+      
+        $client = new Client();
+
+      $client->fill($validated)->save();
+
+      return new ClientResource($client);
+
+    } catch(\Exception $exception) {
+        throw new HttpException(400, "Invalid data - {$exception->getMessage()}");
+    }
+  
+  }
 
   
   public function createClient(Request $req){
