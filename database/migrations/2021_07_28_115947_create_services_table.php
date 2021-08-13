@@ -18,6 +18,7 @@ class CreateServicesTable extends Migration
             $table->string('name');
             $table->string('description')->nullable();
             $table->float('price',9,3);
+            $table->tinyInteger('deleted')->default('0');
             $table->timestamps();
         });
     }

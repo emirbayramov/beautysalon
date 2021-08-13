@@ -18,6 +18,7 @@ class CreateDepartmentsTable extends Migration
             $table->string('name');
             $table->string('address');
             $table->string('description');
+            $table->tinyInteger('deleted')->default('0');
             $table->timestamps();
         });
     }

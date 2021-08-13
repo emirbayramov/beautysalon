@@ -74,8 +74,8 @@ const Masters:FC<Props>=({setState})=>{
       {showPopup && <div className="popup-message-container">
         <div className="popup-message" id="popup-message" tabIndex={0} 
           onKeyPress={evt=>{
-            //if(evt.key==='Enter')
-                //saveButtonOnClick();
+            if(evt.key==='Enter')
+                saveButtonOnClick();
           }}>
           <div className="popup-message__header">
             <i className="far fa-window-close"
@@ -188,9 +188,11 @@ const Masters:FC<Props>=({setState})=>{
                     <td>{getDepartmentName(master.department_id)}</td>
                     <td style={{textAlign:'center',fontSize:'25px',padding:0}}>
                       <i className="far fa-window-close"
-                        onClick={()=>{
+                        onClick={(e)=>{
+                          
                           axios.post(`/settings/deleteUser/${master.id}`)
                             .then(resp=>{update()});
+                          e.stopPropagation();
                         }}></i>
                     </td>
                   </tr>

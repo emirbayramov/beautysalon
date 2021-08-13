@@ -117,7 +117,7 @@ class SettingsController extends Controller
   }
   
   public function getServices(){
-     return ServiceResource::collection(Service::all());
+     return ServiceResource::collection(Service::where('deleted',0)->get());
   }
   
   public function createService(Request $req){
@@ -166,7 +166,8 @@ class SettingsController extends Controller
     }
  
     $service = Service::findOrFail($id);
-    $service->delete();
+    $service->deleted=1;
+    $service->save();
     
     return response()->json(null, 204);
   }
@@ -266,7 +267,7 @@ class SettingsController extends Controller
   }
   
   public function getDepartments(){
-     return DepartmentResource::collection(Department::all());
+     return DepartmentResource::collection(Department::where('deleted',0)->get());
   }
   
 
@@ -321,7 +322,8 @@ class SettingsController extends Controller
     }
  
     $department = Department::findOrFail($id);
-    $department->delete();
+    $department->deleted = 1;
+    $department->save();
     
     return response()->json(null, 204);
   }

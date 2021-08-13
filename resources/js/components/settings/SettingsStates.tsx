@@ -2,7 +2,7 @@ enum State {
   Main,
   Masters,
   Services,
-  Clients
+  Departments
 }
 
 export default State;

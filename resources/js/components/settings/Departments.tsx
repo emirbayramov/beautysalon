@@ -8,16 +8,16 @@ type Props = {
 }
 
 
-const Services:FC<Props>=({setState})=>{
-    const [services,setServices] = useState<any>([]);
+const Departments:FC<Props>=({setState})=>{
+    const [departments,setDepartments] = useState<any>([]);
     const [changed,setChanged] = useState(0);
     //popup
     const [showPopup,setShowPopup] = useState(false);
     const [name,setName] = useState('');
     const [description,setDescription] = useState('');
-    const [price,setPrice] = useState(0);
+    const [address,setAddress] = useState('');
     const [isCreate,setIsCreate] = useState(true);
-    const [selectedService,setService] = useState<any>(null);
+    const [selectedDepartment,setDepartment] = useState<any>(null);
     
     const update=()=>setChanged(changed+1);
 
@@ -25,15 +25,15 @@ const Services:FC<Props>=({setState})=>{
       const data:any = {
         name:name,
         description:description,
-        price:price
+        address:address
       };
 
       if(isCreate){
-        axios.post('/settings/createService',data)
+        axios.post('/settings/createDepartment',data)
         .then(r=>{update();setShowPopup(false);})
         .catch(err=>console.log(err))
       }else{
-        axios.post('/settings/updateService/'+selectedService.id,data)
+        axios.post('/settings/updateDepartment/'+selectedDepartment.id,data)
         .then(r=>{update();setShowPopup(false);})
         .catch(err=>console.log(err))
 
@@ -41,10 +41,10 @@ const Services:FC<Props>=({setState})=>{
     };
 
     useEffect(()=>{
-      axios.get('/settings/getServices')
+      axios.get('/settings/getDepartments')
         .then(response=>{
           console.log(response.data);
-          setServices(response.data.data);
+          setDepartments(response.data.data);
         });
     },[changed]);
 
@@ -63,19 +63,19 @@ const Services:FC<Props>=({setState})=>{
           </div>
           <div className="container-fluid popup-message__body">
             <div className="row  margin-bottom-20">
-              <label htmlFor="serviceName"  className="col-md-3">Name:</label>
-              <input type="text" id="serviceName" className="col-md-5" value={name}
+              <label htmlFor="depName"  className="col-md-3">Adı:</label>
+              <input type="text" id="depName" className="col-md-5" value={name}
                 onChange={(evt)=>{setName(evt.target.value)}}/>
+            </div>
+            <div className="row margin-bottom-20">
+              <label htmlFor="Address" className="col-md-3">Adress:</label>
+              <input type="text" id="Address" className="col-md-5" value={address}
+                onChange={(evt=>{setAddress(evt.target.value)})}/>
             </div>
             <div className="row margin-bottom-20">
               <label htmlFor="description" className="col-md-3">Açıklama:</label>
               <input type="text" id="description" className="col-md-5" value={description}
                 onChange={(evt)=>{setDescription(evt.target.value)}}/>
-            </div>
-            <div className="row margin-bottom-20">
-              <label htmlFor="sprice" className="col-md-3">Fiyat:</label>
-              <input type="number" id="sprice" className="col-md-5" value={price}
-                onChange={(evt=>{setPrice(parseInt(evt.target.value))})}/>
             </div>
             
           </div>
@@ -92,7 +92,7 @@ const Services:FC<Props>=({setState})=>{
           <button className="btn btn-outline-primary btn-sm ml-16" onClick={()=>setState(State.Main)}>Geri</button>
         </div>
         <div className="col-10" style={{textAlign:'center'}}>
-          <h1 >Servisler</h1>
+          <h1 >Bölümler</h1>
         </div>
       </div>
       <div className="col-md-12">
@@ -101,13 +101,13 @@ const Services:FC<Props>=({setState})=>{
               <tr>
                   <th>Adı</th>
                   <th>Açıklama</th>
-                  <th>Fiyatı</th>
+                  <th>Adres</th>
                   <th style={{textAlign:'center',fontSize:'25px',padding:0}}>
                       <i className="far fa-plus-square" 
                         onClick={()=>{
                           setName('');
                           setDescription('');
-                          setPrice(0);
+                          setAddress('');
                           setIsCreate(true);
                           setShowPopup(true);
                           }}></i>
@@ -115,23 +115,23 @@ const Services:FC<Props>=({setState})=>{
               </tr>
               </thead>
               <tbody >
-                {services.map((service:any, i:number)=>{
-                  return <tr key={i+' '+service.id}
+                {departments.map((dep:any, i:number)=>{
+                  return <tr key={i+' '+dep.id}
                     onClick={()=>{
-                        setName(service.name);
-                        setDescription(service.description);
-                        setPrice(service.price);
-                        setService(service);
+                        setName(dep.name);
+                        setDescription(dep.description);
+                        setAddress(dep.address);
+                        setDepartment(dep);
                         setIsCreate(false);
                         setShowPopup(true);
                     }}>
-                    <td>{service.name}</td>
-                    <td>{service.description}</td>
-                    <td>{service.price}</td>
+                    <td>{dep.name}</td>
+                    <td>{dep.description}</td>
+                    <td>{dep.address}</td>
                     <td style={{textAlign:'center',fontSize:'25px',padding:0}}>
                       <i className="far fa-window-close"
                         onClick={(e)=>{
-                          axios.post(`/settings/deleteService/${service.id}`)
+                          axios.post(`/settings/deleteService/${dep.id}`)
                             .then(resp=>{update()});
                             e.stopPropagation();
                         }}></i>
@@ -144,4 +144,4 @@ const Services:FC<Props>=({setState})=>{
     </div>
 }
 
-export default Services;
+export default Departments;
