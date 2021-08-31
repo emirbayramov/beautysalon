@@ -63,7 +63,7 @@ const Services:FC<Props>=({setState})=>{
           </div>
           <div className="container-fluid popup-message__body">
             <div className="row  margin-bottom-20">
-              <label htmlFor="serviceName"  className="col-md-3">Name:</label>
+              <label htmlFor="serviceName"  className="col-md-3">Adı:</label>
               <input type="text" id="serviceName" className="col-md-5" value={name}
                 onChange={(evt)=>{setName(evt.target.value)}}/>
             </div>
@@ -77,14 +77,14 @@ const Services:FC<Props>=({setState})=>{
               <input type="number" id="sprice" className="col-md-5" value={price}
                 onChange={(evt=>{setPrice(parseInt(evt.target.value))})}/>
             </div>
-            
-          </div>
-          <div className="popup-message__footer">
+            <div className="popup-message__footer">
                 <div className="btn btn-outline-primary popup-message__button"
-                  onClick={saveButtonOnClick}>Kayit et</div>
+                  onClick={saveButtonOnClick}>Kaydet</div>
                 <div className="btn btn-outline-primary popup-message__button"
                   onClick={()=>setShowPopup(false)}>Iptal</div>
+            </div>  
           </div>
+          
         </div>
       </div>}
       <div className="row">
@@ -92,8 +92,8 @@ const Services:FC<Props>=({setState})=>{
           <button className="btn btn-outline-primary btn-sm ml-16" onClick={()=>setState(State.Main)}>Geri</button>
         </div>
         <div className="col-10" style={{textAlign:'center'}}>
-          <h1 >Servisler</h1>
-        </div>
+          <h1 >Hizmetler</h1>
+        </div> 
       </div>
       <div className="col-md-12">
         <table className="table table-bordered table-responsive-sm">

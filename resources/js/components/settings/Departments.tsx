@@ -77,14 +77,14 @@ const Departments:FC<Props>=({setState})=>{
               <input type="text" id="description" className="col-md-5" value={description}
                 onChange={(evt)=>{setDescription(evt.target.value)}}/>
             </div>
-            
-          </div>
-          <div className="popup-message__footer">
+            <div className="popup-message__footer">
                 <div className="btn btn-outline-primary popup-message__button"
                   onClick={saveButtonOnClick}>Kayit et</div>
                 <div className="btn btn-outline-primary popup-message__button"
                   onClick={()=>setShowPopup(false)}>Iptal</div>
+            </div>  
           </div>
+          
         </div>
       </div>}
       <div className="row">
@@ -131,7 +131,7 @@ const Departments:FC<Props>=({setState})=>{
                     <td style={{textAlign:'center',fontSize:'25px',padding:0}}>
                       <i className="far fa-window-close"
                         onClick={(e)=>{
-                          axios.post(`/settings/deleteService/${dep.id}`)
+                          axios.post(`/settings/deleteDepartment/${dep.id}`)
                             .then(resp=>{update()});
                             e.stopPropagation();
                         }}></i>

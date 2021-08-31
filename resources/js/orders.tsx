@@ -46,7 +46,7 @@ const Orders:FC=()=>{
         .then((response)=>{
           setDepartments(response.data.data);
         });
-      axios.get('/settings/getUsers?department_id='+currentDepartment)
+      axios.get('/settings/getMasters?department_id='+currentDepartment)
         .then((response)=>{
           setUsers(response.data.data);
         });
@@ -156,23 +156,23 @@ const Orders:FC=()=>{
           </div>
           <div className="container popup-message__body">
             <div className="row margin-bottom-20">
-              <label htmlFor="clientPhone" className="col-md-2">Phone:</label>
+              <label htmlFor="clientPhone" className="col-md-2">Telefon:</label>
               <input type="phone" id="clientPhone" className="col-md-5" value={clientPhone}
                 onChange={(evt)=>{setClientPhone(evt.target.value)}}/>
             </div>
             <div className="row  margin-bottom-20">
-              <label htmlFor="clientName"  className="col-md-2">Name:</label>
+              <label htmlFor="clientName"  className="col-md-2">Adı:</label>
               <input type="text" id="clientName" className="col-md-5" value={clientName}
                 onChange={(evt)=>{setClientName(evt.target.value)}}/>
             </div>
             <div className="row margin-bottom-20">
-              <label htmlFor="service" className="col-md-2">Service:</label>
+              <label htmlFor="service" className="col-md-2">Hizmet:</label>
               <select id="service" className="col-md-5" value={selectedService}
                 onChange={(evt)=>{
                     setSelectedService(parseInt(evt.target.value));
                     setAmount(getServicePrice(parseInt(evt.target.value)));
                   }}>
-                <option value={0}>Select service</option>
+                <option value={0}>Hizmet seç</option>
                 {
                   services.map((service:any,i:number)=>{
                     return <option key={i} value={service.id}>{service.name}</option>
@@ -181,43 +181,49 @@ const Orders:FC=()=>{
               </select>
             </div>
             <div className="row margin-bottom-20">
-              <label htmlFor="amount" className="col-md-2">Amount:</label>
+              <label htmlFor="amount" className="col-md-2">Fiyat:</label>
               <input type="number" id="amount" className="col-md-5" value={amount}
                 onChange={(evt=>{setAmount(parseInt(evt.target.value))})}/>
             </div>
             <div className="row margin-bottom-20">
-              <label htmlFor="next-user" className="col-md-2">Next User:</label>
+              <label htmlFor="next-user" className="col-md-2">Sonraki usta:</label>
               <select id="next-user" className="col-md-5" value={nextUserId}
                 onChange={evt=>{setNextUserId(evt.target.value)}}>
-                  <option value={''}>No Next</option>
+                  <option value={''}>sonraki yok</option>
                   {users.map((user:any,i:number)=>{
                     return <option key={i} value={user.id}>{user.name}</option>
                   })}
               </select>
             </div>
-          </div>
-          <div className="popup-message__footer">
+            <div className="popup-message__footer">
                 <div className="btn btn-outline-primary popup-message__button"
                   onClick={saveButtonOnClick}>Save</div>
                 <div className="btn btn-outline-primary popup-message__button"
                   onClick={()=>setShowPopup(false)}>Cancel</div>
           </div>
+          </div>
+          
         </div>
       </div>}
       <div className="row margin-bottom-20">
-        <label htmlFor="selectedDate">Date:</label>
-        <input type="date" id="selectedDate" className="margin-lr-20" value={selectedDate.toISOString().split('T')[0]} 
-          onChange={(evt)=>{setSelectedDate(new Date(evt.target.value))}}/>
-        <label htmlFor="currentDepartment">Department:</label>
-        <select id="currentDepartment"  className="margin-lr-20" 
-            value={currentDepartment}
-            onChange={(evt)=>{setCurrentDepartment(parseInt(evt.target.value))}}>
-            {
-              departments.map((department:any,i:number)=>{
-                return <option key={i} value={department.id}>{department.name}</option>
-              })
-            }
-        </select>
+        <div className="col-md-6  col-sm-12">
+          <label htmlFor="selectedDate" className="col-4">Date:</label>
+          <input type="date" id="selectedDate" className="col-6 margin-lr-20" value={selectedDate.toISOString().split('T')[0]} 
+            onChange={(evt)=>{setSelectedDate(new Date(evt.target.value))}}/>
+        </div>
+        <div className="col-md-6  col-sm-12">
+          <label htmlFor="currentDepartment" className="col-4">Department:</label>
+          <select id="currentDepartment"  className="col-6 margin-lr-20" 
+              value={currentDepartment}
+              onChange={(evt)=>{setCurrentDepartment(parseInt(evt.target.value))}}>
+              {
+                departments.map((department:any,i:number)=>{
+                  return <option key={i} value={department.id}>{department.name}</option>
+                })
+              }
+          </select>
+        </div>
+        
       </div>
       <div className="overflow-scrol" >
         <table className="table table-bordered table-responsive-sm "

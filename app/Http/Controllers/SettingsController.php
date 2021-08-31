@@ -7,20 +7,21 @@ use App\Models\User;
 use App\Models\Service;
 use App\Models\Department;
 use App\Models\Client;
+use App\Models\Price;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\ServiceResource;
 use App\Http\Resources\DepartmentResource;
 use App\Http\Resources\ClientResource;
+use App\Http\Resources\PriceResource;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class SettingsController extends Controller
 {
   public function __construct()
   {
-    // TODO: uncomment
-      // $this->middleware('auth');
+      $this->middleware('auth');
   }
 
   public function settings()
@@ -39,9 +40,20 @@ class SettingsController extends Controller
     ]);
     if(isset($validated['department_id']))
       return UserResource::collection(
-        User::where('department_id',$req['department_id'])->where('deleted',0)->get());
-    return UserResource::collection(User::where('deleted',0)->get());
+        User::where('department_id',$req['department_id'])->where('deleted',0)->where('role','ADMIN')->get());
+    return UserResource::collection(User::where('deleted',0)->where('role','ADMIN')->get());
   }
+
+  public function getMasters(Request $req){
+    $validated = $req->validate([
+      'department_id'=>'nullable|integer'
+    ]);
+    if(isset($validated['department_id']))
+      return UserResource::collection(
+        User::where('department_id',$req['department_id'])->where('deleted',0)->where('role','MASTER')->get());
+    return UserResource::collection(User::where('deleted',0)->where('role','MASTER')->get());
+  }
+
 
   public function createUser(Request $req){
         try {
@@ -88,7 +100,10 @@ class SettingsController extends Controller
           'role'=>'nullable|string',
           'department_id'=>'nullable|integer',
         ]);
-        
+        if(isset($validated['password'])){
+          $validated['password']=Hash::make($validated['password']);
+        }
+
         $user->fill($validated)->save();
             
         return new UserResource($user);
@@ -326,6 +341,27 @@ class SettingsController extends Controller
     $department->save();
     
     return response()->json(null, 204);
+  }
+
+  public function getPrices(){
+    return new PriceResource(Price::where('id',1)->first());
+  }
+
+  public function setPrices(Request $req){
+    try{
+      $price = Price::find(1);  
+      $validated = $req->validate([
+        'fixed'=>'nullable|numeric',
+        'percent'=>'nullable|numeric'
+      ]);
+
+      $price->fill($validated)->save();
+      return new PriceResource($price);
+
+    } catch(\Exception $e) {
+      throw new HttpException(400,'Invalid data'.$e->getMessage());
+    }
+
   }
 
 }

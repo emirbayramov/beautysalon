@@ -13,7 +13,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-
+        $this->middleware('auth');
     }
 
     /**
@@ -21,8 +21,15 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Request $req)
     {
+        $user = $req->user();
+        if($user->role === "ADMIN")
+            return redirect('/orders');
+        elseif($user->role === "MANAGER")
+            return redirect('/orders');
+        elseif($user->role === "MASTER")
+            return redirect('/myorders');
         return view('home');
     }
 }

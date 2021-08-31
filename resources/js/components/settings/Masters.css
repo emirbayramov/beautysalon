@@ -13,6 +13,7 @@
     width:100%;
     height: 100%;
     z-index: 100;
+    
 }
 
 .popup-message {
@@ -23,6 +24,7 @@
     border-radius: 25px;
     box-shadow: 5px 10px rgba(0, 0, 0, 0.5);
     padding:20px 20px;
+    overflow: auto;
 }
 
 .popup-message__header {
@@ -45,10 +47,14 @@
     justify-content: center;
 }
 .popup-message__button{
-    margin: 0 20px;
+    margin: 0 20px 10px;
 }
 
 .margin-lr-20{
     margin:0 20px;
 }
 
+.flex-space-aroud{
+    display:flex;
+    justify-content: space-evenly;
+}

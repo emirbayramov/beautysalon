@@ -24,6 +24,7 @@ Route::get('/reports', [App\Http\Controllers\ReportsController::class, 'report']
 
 Route::get('/settings/getUser/{id}', [App\Http\Controllers\SettingsController::class, 'getUser'])->name('getUser');
 Route::get('/settings/getUsers', [App\Http\Controllers\SettingsController::class, 'getUsers'])->name('getUsers');
+Route::get('/settings/getMasters', [App\Http\Controllers\SettingsController::class, 'getMasters'])->name('getMasters');
 Route::post('/settings/createUser', [App\Http\Controllers\SettingsController::class, 'createUser'])->name('createUser');
 Route::post('/settings/updateUser/{id}', [App\Http\Controllers\SettingsController::class, 'updateUser'])->name('updateUser');
 Route::post('/settings/deleteUser/{id}', [App\Http\Controllers\SettingsController::class, 'deleteUser'])->name('deleteUser');
@@ -47,6 +48,11 @@ Route::post('/settings/createDepartment', [App\Http\Controllers\SettingsControll
 Route::post('/settings/updateDepartment/{id}', [App\Http\Controllers\SettingsController::class, 'updateDepartment'])->name('updateDepartment');
 Route::post('/settings/deleteDepartment/{id}', [App\Http\Controllers\SettingsController::class, 'deleteDepartment'])->name('deleteDepartment');
 
+Route::get('/settings/getPrices', [App\Http\Controllers\SettingsController::class, 'getPrices'])->name('getPrices');
+Route::post('/settings/setPrices', [App\Http\Controllers\SettingsController::class, 'setPrices'])->name('setPrices');
+
+Route::get('/reports/gerReport', [App\Http\Controllers\ReportsController::class, 'getReport'])->name('getReport');
+
 Route::get('/orders/getOrder/{id}', [App\Http\Controllers\OrdersController::class, 'getOrder'])->name('getOrder');
 Route::get('/orders/getOrders', [App\Http\Controllers\OrdersController::class, 'getOrders'])->name('getOrders');
 Route::post('/orders/createOrder', [App\Http\Controllers\OrdersController::class, 'createOrder'])->name('createOrder');
@@ -55,7 +61,7 @@ Route::post('/orders/deleteOrder/{id}', [App\Http\Controllers\OrdersController::
 Route::get('/orders/getOrdersByDate', [App\Http\Controllers\OrdersController::class, 'getOrdersByDate'])->name('getOrdersByDate');
 
 Auth::routes([
- // 'register' => false, // Registration Routes...
+  'register' => false, // Registration Routes...
   'reset' => false, // Password Reset Routes...
   'verify' => false, // Email Verification Routes...
 ]);

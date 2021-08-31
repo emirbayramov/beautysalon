@@ -13,8 +13,7 @@ class OrdersController extends Controller
 {
   public function __construct()
   {
-      // TODO: uncomment
-      // $this->middleware('auth');
+      $this->middleware('auth');
   }
 
   public function list()
@@ -37,7 +36,7 @@ class OrdersController extends Controller
           'department_id'=>'required|numeric'
         ]);
         $users = User::where('department_id',$validated['department_id'])
-          ->where('deleted',0)->get();
+          ->where('deleted',0)->where('role','MASTER')->get();
         
         $table = array();
         $table['users']  = array();
