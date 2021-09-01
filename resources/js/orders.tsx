@@ -2,19 +2,28 @@ import React,{FC,useEffect,useState} from 'react'
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 import './orders.css';
-import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants';
 
 const hours=[8,9,10,11,12,13,14,15,16,17,18,19];
 
 const getOrderOrEmpty=(userOrders:any,hour:number)=>{
 };
 
+type Props = {
+  setState:any
+}
+
+const NextOrder:FC<Props> = ({})=>{
+
+};
+
+
+
 const Orders:FC=()=>{
 
     const [ordersTable,setOrdersTable]   = useState<any>([]);
     const [departments,setDepartments]   = useState<any>([]);
     const [selectedDate,setSelectedDate] = useState(new Date());
-    
+
     const [ordersChanged,setOrdersChanged] = useState(0);
     const [services,setServices] = useState<any>([]);
     const [users,setUsers] = useState<any>([]);
@@ -51,7 +60,7 @@ const Orders:FC=()=>{
           setUsers(response.data.data);
         });
     },[currentDepartment,ordersChanged,selectedDate]);
-    
+
     const getUserName = (id:any) =>{
       for(let i=0;i<users.length;i++)
         if(users[i].id===id)
@@ -70,7 +79,7 @@ const Orders:FC=()=>{
     const setConfirmedOrder = (orderId:number,confirmed:number)=>{
       axios.post(`/orders/updateOrder/${orderId}`,{confirmed:confirmed})
         .then((response)=>update());
-      
+
     }
 
     const getServicePrice=(id:any)=>{
@@ -110,7 +119,7 @@ const Orders:FC=()=>{
         }).catch(err=>{
           console.log(err);
         });
-        
+
       } else {
         axios.post(`/settings/updateClient/${selectedOrder.client.id}`,{
           name:clientName,
@@ -139,13 +148,13 @@ const Orders:FC=()=>{
           console.log(err);
         });
       }
-         
+
     };
 
 
     return <div className="container-fluid">
       {showPopup && <div className="popup-message-container">
-        <div className="popup-message" id="popup-message" tabIndex={0} 
+        <div className="popup-message" id="popup-message" tabIndex={0}
           onKeyPress={evt=>{
             if(evt.key==='Enter')
                 saveButtonOnClick();
@@ -202,18 +211,18 @@ const Orders:FC=()=>{
                   onClick={()=>setShowPopup(false)}>Cancel</div>
           </div>
           </div>
-          
+
         </div>
       </div>}
       <div className="row margin-bottom-20">
         <div className="col-md-6  col-sm-12">
           <label htmlFor="selectedDate" className="col-4">Date:</label>
-          <input type="date" id="selectedDate" className="col-6 margin-lr-20" value={selectedDate.toISOString().split('T')[0]} 
+          <input type="date" id="selectedDate" className="col-6 margin-lr-20" value={selectedDate.toISOString().split('T')[0]}
             onChange={(evt)=>{setSelectedDate(new Date(evt.target.value))}}/>
         </div>
         <div className="col-md-6  col-sm-12">
           <label htmlFor="currentDepartment" className="col-4">Department:</label>
-          <select id="currentDepartment"  className="col-6 margin-lr-20" 
+          <select id="currentDepartment"  className="col-6 margin-lr-20"
               value={currentDepartment}
               onChange={(evt)=>{setCurrentDepartment(parseInt(evt.target.value))}}>
               {
@@ -223,19 +232,19 @@ const Orders:FC=()=>{
               }
           </select>
         </div>
-        
+
       </div>
       <div className="overflow-scrol" >
         <table className="table table-bordered table-responsive-sm "
           style={{}}>
           <thead>
-            
+
             <tr>
             <th></th>
               {
                 ordersTable.users&&Object.values(ordersTable.users)
                   .map((user:any,i:number)=>{
-                    return <th 
+                    return <th
                       style={{position:'sticky',
                       top:0,
                       backgroundColor:'#f8fafc',
@@ -248,10 +257,10 @@ const Orders:FC=()=>{
           <tbody>
             {
              ordersTable.orders && hours.map((hour,i)=><tr key={i+" "+hour}>
-               <td style={{width:'50px',textAlign:'center' ,backgroundColor:'#f8fafc',zIndex:10,position:'sticky',left:'0'}}>{hour}:00</td> 
+               <td style={{width:'50px',textAlign:'center' ,backgroundColor:'#f8fafc',zIndex:10,position:'sticky',left:'0'}}>{hour}:00</td>
                 {
                   Object.values(ordersTable.orders)
-                    .map((userOrders:any,j:number)=>{  
+                    .map((userOrders:any,j:number)=>{
                       let order:any=null;
                       for(let i=0;i<userOrders.length;i++){
                         const orderHour = new Date(userOrders[i].datetime).getHours();
@@ -259,7 +268,7 @@ const Orders:FC=()=>{
                           order = userOrders[i];
                         }
                       }
-                      
+
                       if(order){
                         //console.log(order);
                         let tdClassName = 'td-order';
@@ -268,7 +277,7 @@ const Orders:FC=()=>{
                         else if(order.confirmed===2)
                           tdClassName = 'order-will-come td-order';
 
-                        return <td key={hour+' '+j+' '+i} 
+                        return <td key={hour+' '+j+' '+i}
                             className={tdClassName}
                             onClick={()=>{
                               setIsCreate(false);
@@ -281,7 +290,7 @@ const Orders:FC=()=>{
                               setComment(order.comment);
                               setSelectedDate(new Date(selectedDate.getFullYear(),selectedDate.getMonth(),selectedDate.getDate(),hour))
                               setCurrentUser(Object.keys(ordersTable.orders)[j]);
-                              setShowPopup(true);   
+                              setShowPopup(true);
                             }}>
                           <div className="orders-cell">
                             <div className="order-cell__header">
@@ -294,7 +303,7 @@ const Orders:FC=()=>{
                                     setConfirmedOrder(order.id,0);
                                   e.stopPropagation();
                                   }}></i>
-                              <i className="far fa-check-square" 
+                              <i className="far fa-check-square"
                                 style={{marginRight:'10px'}}
                                 onClick={(e)=>{
                                   if(order.confirmed!==1)
@@ -302,7 +311,7 @@ const Orders:FC=()=>{
                                   else
                                     setConfirmedOrder(order.id,0);
                                   e.stopPropagation();
-                                  }}></i>  
+                                  }}></i>
                               <i className="far fa-window-close"
                                 onClick={(e)=>{
                                   deleteOrder(order.id);
@@ -317,7 +326,7 @@ const Orders:FC=()=>{
                             </div>
                           </td>;
                        }else{
-                        return <td key={hour+' '+j+' '+i} 
+                        return <td key={hour+' '+j+' '+i}
                           style={{width:'100px',minWidth:'125px'}}
                           onClick={()=>{
                             setIsCreate(true);
@@ -328,7 +337,7 @@ const Orders:FC=()=>{
                             setNextUserId('');
                             setSelectedDate(new Date(selectedDate.getFullYear(),selectedDate.getMonth(),selectedDate.getDate(),hour))
                             setCurrentUser(Object.keys(ordersTable.orders)[j]);
-                            setShowPopup(true);   
+                            setShowPopup(true);
                           }}>
                             <div className="orders-cell-empty"></div>
                           </td>;

@@ -33,7 +33,7 @@ class SettingsController extends Controller
       $user = User::findOrFail($id);
       return new UserResource($user);
   }
-  
+
   public function getUsers(Request $req){
     $validated = $req->validate([
       'department_id'=>'nullable|integer'
@@ -66,7 +66,7 @@ class SettingsController extends Controller
             'role'=>'required|string',
             'department_id'=>'required|integer',
           ]);
-         
+
           $user->name=$validated['name'];
           $user->email=$validated['email'];
           $user->phone=$validated['phone'];
@@ -79,14 +79,14 @@ class SettingsController extends Controller
           return new UserResource($user);
 
         } catch(\Exception $exception) {
-              
+
           throw new HttpException(400, "Invalid data - {$exception->getMessage()}");
         }
-      
+
   }
 
   public function updateUser(Request $req,$id){
-      
+
       if(!$id){
         throw new HttpException(400, "Invalid id");
       }
@@ -105,13 +105,13 @@ class SettingsController extends Controller
         }
 
         $user->fill($validated)->save();
-            
+
         return new UserResource($user);
 
       } catch(\Exception $e) {
         throw new HttpException(400,'Invalid data');
       }
-      
+
   }
 
   public function deleteUser(Request $req,$id){
@@ -122,7 +122,7 @@ class SettingsController extends Controller
     $user = User::findOrFail($id);
     $user->deleted = 1;
     $user->save();
-    
+
     return response()->json(null, 204);
   }
 
@@ -130,11 +130,11 @@ class SettingsController extends Controller
       $service = Service::findOrFail($id);
       return new ServiceResource($service);
   }
-  
+
   public function getServices(){
      return ServiceResource::collection(Service::where('deleted',0)->get());
   }
-  
+
   public function createService(Request $req){
         try {
           $service = new Service;
@@ -151,16 +151,16 @@ class SettingsController extends Controller
         } catch(\Exception $exception) {
             throw new HttpException(400, "Invalid data - {$exception->getMessage()}");
         }
-      
+
   }
 
   public function updateService(Request $req,$id){
-      
+
       if(!$id){
         throw new HttpException(400, "Invalid id");
       }
       try{
-        $service = Service::find($req->id);  
+        $service = Service::find($req->id);
         $validated = $req->validate([
           'name'=>'nullable|string',
           'description'=>'nullable|string',
@@ -172,33 +172,49 @@ class SettingsController extends Controller
       } catch(\Exception $e) {
         throw new HttpException(400,'Invalid data');
       }
-      
+
   }
 
   public function deleteService(Request $req,$id){
     if (!$id){
       throw new HttpException(400, "Invalid id");
     }
- 
+
     $service = Service::findOrFail($id);
     $service->deleted=1;
     $service->save();
-    
+
     return response()->json(null, 204);
+  }
+
+  public function search(Request $req){
+    $validated = $req->validate(['name'=>'nullable|string','tel'=>'nullable|string']);
+    $clients = [];
+    if(isset($validated['name']))
+      $clients = Client::where('name', 'LIKE', $validated['name'].'%')->get();
+    if(isset($validated['tel']))
+      $clients = Client::where('tel', 'LIKE', $validated['tel'].'%')->get();
+
+    return ClientResource::collection($clients);
+
+  }
+
+  public function searchByPhone(Request $req){
+
   }
 
   public function getClient($id){
       $client = Client::findOrFail($id);
       return new ClientResource($client);
   }
-  
+
   public function getClients(){
      return ClientResource::collection(Client::all());
   }
-  
+
   public function getOrCreateClient(Request $req){
     try {
-      
+
       $validated = $req->validate([
           'phone'=>'required|string',
           'name' =>'required|string',
@@ -208,7 +224,7 @@ class SettingsController extends Controller
       $client = Client::where('phone',$validated['phone'])->first();
       if($client)
         return new ClientResource($client);
-      
+
         $client = new Client();
 
       $client->fill($validated)->save();
@@ -218,10 +234,10 @@ class SettingsController extends Controller
     } catch(\Exception $exception) {
         throw new HttpException(400, "Invalid data - {$exception->getMessage()}");
     }
-  
+
   }
 
-  
+
   public function createClient(Request $req){
         try {
           $client = new Client;
@@ -239,40 +255,40 @@ class SettingsController extends Controller
         } catch(\Exception $exception) {
             throw new HttpException(400, "Invalid data - {$exception->getMessage()}");
         }
-      
+
   }
 
   public function updateClient(Request $req,$id){
-      
+
       if(!$id){
         throw new HttpException(400, "Invalid id");
       }
       try{
-        $client = Client::findOrFail($req->id);  
+        $client = Client::findOrFail($req->id);
         $validated = $req->validate([
           'phone'=>'nullable|string',
           'name' =>'nullable|string',
           'surname' =>'nullable|string',
           'birth_date' =>'nullable|date',
         ]);
-        
+
         $client->fill($validated)->save();
         return new ClientResource($client);
 
       } catch(\Exception $e) {
         throw new HttpException(400,'Invalid data');
       }
-      
+
   }
 
   public function deleteClient(Request $req,$id){
     if (!$id){
       throw new HttpException(400, "Invalid id");
     }
- 
+
     $client = Client::findOrFail($id);
     $client->delete();
-    
+
     return response()->json(null, 204);
   }
 
@@ -280,13 +296,13 @@ class SettingsController extends Controller
       $department = Department::findOrFail($id);
       return new DepartmentResource($department);
   }
-  
+
   public function getDepartments(){
      return DepartmentResource::collection(Department::where('deleted',0)->get());
   }
-  
 
-  
+
+
   public function createDepartment(Request $req){
         try {
           $department = new Department;
@@ -298,7 +314,7 @@ class SettingsController extends Controller
           $department->name = $validated['name'];
           $department->address = $validated['address'];
           $department->description = $validated['description'];
-          
+
           $department->save();
 
           return new DepartmentResource($department);
@@ -306,16 +322,16 @@ class SettingsController extends Controller
         } catch(\Exception $exception) {
             return "Invalid data - {$exception->getMessage()}";
         }
-      
+
   }
 
   public function updateDepartment(Request $req,$id){
-      
+
       if(!$id){
         throw new HttpException(400, "Invalid id");
       }
       try{
-        $department = Department::find($req->id);  
+        $department = Department::find($req->id);
         $validated = $req->validate([
           'name'=>'nullable|string',
           'address'=>'nullable|string',
@@ -328,18 +344,18 @@ class SettingsController extends Controller
       } catch(\Exception $e) {
         throw new HttpException(400,'Invalid data');
       }
-      
+
   }
 
   public function deleteDepartment(Request $req,$id){
     if (!$id){
       throw new HttpException(400, "Invalid id");
     }
- 
+
     $department = Department::findOrFail($id);
     $department->deleted = 1;
     $department->save();
-    
+
     return response()->json(null, 204);
   }
 
@@ -349,7 +365,7 @@ class SettingsController extends Controller
 
   public function setPrices(Request $req){
     try{
-      $price = Price::find(1);  
+      $price = Price::find(1);
       $validated = $req->validate([
         'fixed'=>'nullable|numeric',
         'percent'=>'nullable|numeric'
