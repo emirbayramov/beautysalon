@@ -2,24 +2,41 @@ import React,{FC,useEffect,useState} from 'react'
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 import './orders.css';
-
+import Autosuggest from 'react-autosuggest';
+   
 const hours=[8,9,10,11,12,13,14,15,16,17,18,19];
 
 const getOrderOrEmpty=(userOrders:any,hour:number)=>{
 };
 
 type Props = {
-  setState:any
+  service:boolean,
+  time:boolean,
+  price:boolean,
+  addNextOrder:()=>void
 }
 
-const NextOrder:FC<Props> = ({})=>{
-
+const NextOrder:FC<Props> = (props:Props) => {
+ 
+ return <>
+  <div className="row margin-bottom-20">
+      <div className="col-md-6">
+        <label htmlFor="next-user" className="form-label">Sonraki usta:</label>
+        <select id="next-user" className="form-control" value={nextUserId}
+          onChange={evt=>{setNextUserId(evt.target.value)}}>
+          <option value={''}>sonraki yok</option>
+          {users.map((user:any,i:number)=>{
+               return <option key={i} value={user.id}>{user.name}</option>
+           })}
+        </select>
+      </div>
+  </div>
+ </>;
 };
 
 
 
 const Orders:FC=()=>{
-
     const [ordersTable,setOrdersTable]   = useState<any>([]);
     const [departments,setDepartments]   = useState<any>([]);
     const [selectedDate,setSelectedDate] = useState(new Date());
@@ -27,6 +44,7 @@ const Orders:FC=()=>{
     const [ordersChanged,setOrdersChanged] = useState(0);
     const [services,setServices] = useState<any>([]);
     const [users,setUsers] = useState<any>([]);
+    
     //popup fields data
     const [showPopup,setShowPopup] = useState(false);
     const [clientPhone,setClientPhone] = useState('');
@@ -39,6 +57,67 @@ const Orders:FC=()=>{
     const [isCreate,setIsCreate] = useState(true);
     const [selectedOrder,setSelectedOrder] = useState<any>(null);
     const [nextUserId,setNextUserId] = useState<any>('');
+    const [validated,setValidated] = useState<any>({
+      phone:true,
+      name:true,
+      service:true,
+      amount:true
+    });
+    const [phoneSuggestions,setPhoneSuggestions] = useState<any>([]);
+    const [nameSuggestions,setNameSuggestions] = useState<any>([]);
+
+
+    const reset = ()=>{
+      setValidated({
+        phone:true,
+        name:true,
+        service:true,
+        amount:true
+      });
+    };
+
+    const onPhoneSuggestionsFetchRequested = (data:any)=>{
+       axios.get('/settings/find?phone='+data.value)
+        .then(resp=>{
+          setPhoneSuggestions(resp.data.data);
+        }); 
+    };
+
+    const onPhoneSuggestionsClearRequested = ()=>{
+      setPhoneSuggestions([]);
+    };
+
+    const getPhoneSuggestionValue = (suggestion:any)=>{
+      return suggestion.phone;
+    }
+
+    const onNameSuggestionsFetchRequested = (data:any)=>{
+      axios.get('/settings/find?name='+data.value)
+       .then(resp=>{
+         setNameSuggestions(resp.data.data);
+       }); 
+   };
+
+   const onNameSuggestionsClearRequested = ()=>{
+     setNameSuggestions([]);
+   };
+
+   const getNameSuggestionValue = (suggestion:any)=>{
+     return suggestion.name;
+   }
+
+    const renderSuggestion = (suggestion:any, query :any) => {
+      return <span className="suggestion">{suggestion.phone}</span>;
+    }
+
+    const renderNameSuggestion = (suggestion:any, query :any) => {
+      return <span className="suggestion">{suggestion.name}</span>;
+    }
+
+    const onSuggestionSelected = (evt:any,s:any)=>{
+      setClientName(s.suggestion.name);
+      setClientPhone(s.suggestion.phone);
+    };
 
     useEffect(()=>{
       axios.get(`/orders/getOrdersByDate?date=`+
@@ -90,8 +169,19 @@ const Orders:FC=()=>{
 
       return 0;
     }
+    const validate=()=>{
+      let name=false,phone=false;
+      if(clientName&&clientName!=='')
+        name=true;
+      if(clientPhone&&clientPhone!=='')
+        phone=true;
+      
+      setValidated({name,phone,service:selectedService,amount});
 
+      return name&&phone&&selectedService!==0&&amount;
+    };
     const saveButtonOnClick = ()=>{
+      if(!validate())return;
       if(isCreate){
         axios.post('/settings/getOrCreateClient',{
           name:clientName,
@@ -141,6 +231,7 @@ const Orders:FC=()=>{
           .then((response)=>{
             setShowPopup(false);
             update();
+            reset();
           }).catch(err=>{
             console.log(err);
           });
@@ -161,54 +252,87 @@ const Orders:FC=()=>{
           }}>
           <div className="popup-message__header">
             <i className="far fa-window-close"
-              onClick={()=>setShowPopup(false)}></i>
+              onClick={()=>{setShowPopup(false);reset();}}></i>
           </div>
           <div className="container popup-message__body">
             <div className="row margin-bottom-20">
-              <label htmlFor="clientPhone" className="col-md-2">Telefon:</label>
-              <input type="phone" id="clientPhone" className="col-md-5" value={clientPhone}
-                onChange={(evt)=>{setClientPhone(evt.target.value)}}/>
+            
+              <div className="col-md-6">
+                  <label htmlFor="clientPhone" className="form-label">Telefon:</label>
+                  <Autosuggest
+                    suggestions={phoneSuggestions}
+                    onSuggestionsFetchRequested={onPhoneSuggestionsFetchRequested}
+                    onSuggestionsClearRequested={onPhoneSuggestionsClearRequested}
+                    getSuggestionValue={getPhoneSuggestionValue}
+                    renderSuggestion={renderSuggestion}
+                    onSuggestionSelected={onSuggestionSelected}
+                    inputProps={{
+                      className:`form-control ${validated.phone?'':'is-invalid'}`,
+                      value:clientPhone,
+                      onChange:(evt,{newValue})=>{setClientPhone(newValue)}}}
+                    focusInputOnSuggestionClick={false}
+                  />
+              </div>
+              <div className="col-md-6">
+                <label htmlFor="clientName"  className="form-label">Adı:</label>
+                <Autosuggest
+                    suggestions={nameSuggestions}
+                    onSuggestionsFetchRequested={onNameSuggestionsFetchRequested}
+                    onSuggestionsClearRequested={onNameSuggestionsClearRequested}
+                    getSuggestionValue={getNameSuggestionValue}
+                    renderSuggestion={renderNameSuggestion}
+                    onSuggestionSelected={onSuggestionSelected}
+                    inputProps={{
+                      className:`form-control ${validated.name?'':'is-invalid'}`,
+                      value:clientName,
+                      onChange:(evt,{newValue})=>{setClientName(newValue)}}}
+                    focusInputOnSuggestionClick={false}
+                  />
+                
+              </div>
             </div>
-            <div className="row  margin-bottom-20">
-              <label htmlFor="clientName"  className="col-md-2">Adı:</label>
-              <input type="text" id="clientName" className="col-md-5" value={clientName}
-                onChange={(evt)=>{setClientName(evt.target.value)}}/>
+            
+            <div className="row margin-bottom-20">
+              <div className="col-md-6">
+                <label htmlFor="service" className="form-label">Hizmet:</label>
+                <select id="service" 
+                  className={`form-control ${validated.service?'':'is-invalid'}`} value={selectedService}
+                  onChange={(evt)=>{
+                      setSelectedService(parseInt(evt.target.value));
+                      setAmount(getServicePrice(parseInt(evt.target.value)));
+                    }}>
+                  <option value="">Hizmet seç</option>
+                  {
+                    services.map((service:any,i:number)=>{
+                      return <option key={i} value={service.id}>{service.name}</option>
+                    })
+                  }
+                </select>
+              </div>
+              <div className="col-md-6">
+                <label htmlFor="amount" className="form-label">Fiyat:</label>
+                <input type="number" id="amount" 
+                  className={`form-control ${validated.amount?'':'is-invalid'}`} value={amount}
+                  onChange={(evt=>{setAmount(parseInt(evt.target.value))})}/>
+              </div>
             </div>
             <div className="row margin-bottom-20">
-              <label htmlFor="service" className="col-md-2">Hizmet:</label>
-              <select id="service" className="col-md-5" value={selectedService}
-                onChange={(evt)=>{
-                    setSelectedService(parseInt(evt.target.value));
-                    setAmount(getServicePrice(parseInt(evt.target.value)));
-                  }}>
-                <option value={0}>Hizmet seç</option>
-                {
-                  services.map((service:any,i:number)=>{
-                    return <option key={i} value={service.id}>{service.name}</option>
-                  })
-                }
-              </select>
-            </div>
-            <div className="row margin-bottom-20">
-              <label htmlFor="amount" className="col-md-2">Fiyat:</label>
-              <input type="number" id="amount" className="col-md-5" value={amount}
-                onChange={(evt=>{setAmount(parseInt(evt.target.value))})}/>
-            </div>
-            <div className="row margin-bottom-20">
-              <label htmlFor="next-user" className="col-md-2">Sonraki usta:</label>
-              <select id="next-user" className="col-md-5" value={nextUserId}
-                onChange={evt=>{setNextUserId(evt.target.value)}}>
-                  <option value={''}>sonraki yok</option>
-                  {users.map((user:any,i:number)=>{
-                    return <option key={i} value={user.id}>{user.name}</option>
-                  })}
-              </select>
+              <div className="col-md-6">
+                <label htmlFor="next-user" className="form-label">Sonraki usta:</label>
+                <select id="next-user" className="form-control" value={nextUserId}
+                  onChange={evt=>{setNextUserId(evt.target.value)}}>
+                    <option value={''}>sonraki yok</option>
+                    {users.map((user:any,i:number)=>{
+                      return <option key={i} value={user.id}>{user.name}</option>
+                    })}
+                </select>
+              </div>
             </div>
             <div className="popup-message__footer">
                 <div className="btn btn-outline-primary popup-message__button"
-                  onClick={saveButtonOnClick}>Save</div>
+                  onClick={saveButtonOnClick}>Kaydet</div>
                 <div className="btn btn-outline-primary popup-message__button"
-                  onClick={()=>setShowPopup(false)}>Cancel</div>
+                  onClick={()=>{setShowPopup(false);reset();}}>İptal</div>
           </div>
           </div>
 

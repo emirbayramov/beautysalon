@@ -21,7 +21,7 @@ class SettingsController extends Controller
 {
   public function __construct()
   {
-      $this->middleware('auth');
+//      $this->middleware('auth');
   }
 
   public function settings()
@@ -188,12 +188,12 @@ class SettingsController extends Controller
   }
 
   public function search(Request $req){
-    $validated = $req->validate(['name'=>'nullable|string','tel'=>'nullable|string']);
+    $validated = $req->validate(['name'=>'nullable|string','phone'=>'nullable|string']);
     $clients = [];
     if(isset($validated['name']))
-      $clients = Client::where('name', 'LIKE', $validated['name'].'%')->get();
-    if(isset($validated['tel']))
-      $clients = Client::where('tel', 'LIKE', $validated['tel'].'%')->get();
+      $clients = Client::where('name', 'LIKE', $validated['name'].'%')->take(10)->get();
+    if(isset($validated['phone']))
+      $clients = Client::where('phone', 'LIKE', $validated['phone'].'%')->take(10)->get();
 
     return ClientResource::collection($clients);
 
